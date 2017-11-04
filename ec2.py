@@ -15,3 +15,17 @@ def list_instances(Filter, RegionName, InstanceIds):
   name = {}
   for i in instances:
     try:
+      name=(items for items in i.tags if item["Keys"] == "Name").next()
+    except StopIteration:
+      name['Value'] = ''
+    print cloumns_format % (
+                              num,
+                              name['Value'],
+                              i.public_ip_address,
+                              i.private_ip_address,
+                              i.id,
+                              i.instance_type,
+                              i.vpc_id,
+                              i.state['Name'],
+                           )
+    num = num + 1
