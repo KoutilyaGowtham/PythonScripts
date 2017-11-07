@@ -37,4 +37,28 @@ def main():
   key_pair = None
   instance_id = None
   instance_state = None
-
+  
+  session=boto3.Session(profile_name=args.aws_profile)
+  ec2=session.resource('ec2')
+  client=session.client('ec2')
+  
+  #KeyPair
+  
+  if args.aws_key:
+    key_name=args.aws_key
+  
+  if args.aws_type:
+    key_name=args.aws_type
+    
+  try:
+    key_pair=ec2.keypair(key_name)
+    key_pair.load()
+    logger.info("Found keypair with fingerprint")
+    logger.info(key_pair.key_fingerprint)
+    
+  except:
+    try:
+      r = client.create_key_pair(KeyName=key_name)
+      print("Key is Created")
+      
+    
