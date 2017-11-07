@@ -1,6 +1,3 @@
-import boto3
-import sys
-
 #! /usr/bin/env python
 #! -*- coding: utf-8 *-*-
 
