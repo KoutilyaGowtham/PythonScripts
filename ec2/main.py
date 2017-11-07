@@ -74,3 +74,8 @@ def main():
       print(e)
       logger.error("Unable to create key.")
     
+    ## Creating Instance
+    
+    r = client.describe_instances(Filters=[{'Name':'key-name','Values':[key_name]}])
+    if len(r['Reservations']) > 0:
+      
