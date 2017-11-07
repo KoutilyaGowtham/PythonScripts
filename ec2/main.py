@@ -61,4 +61,16 @@ def main():
       r = client.create_key_pair(KeyName=key_name)
       print("Key is Created")
       
+      with open(key_name + '.pem', w) as f:
+        f.write(r['keyMaterial'])
+        print("Downloaded Keypair")
+        
+        key_pair=ec2.keypair(key_name)
+        key_pair.load()
+        logger.info("Found keypair with fingerprint")
+        logger.info(key_pair.key_fingerprint)
+      
+    except Exception as e:
+      print(e)
+      logger.error("Unable to create key.")
     
