@@ -120,23 +120,77 @@ def main():
           print('Instance %s is %s' % (instance_id,instance_state))
         except:
           print('Unable to create Instance')
-        
-           
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-            
+     
+    if instance_state in ('shutting-down'):
+      waiter = client.get_waiter('instance_terminated')
+      waiter.wait(InstanceIds=[instance_id])
+      instance_state = 'terminated'
+      print('Instance %s terminated' % (instance_id))
+    
+    if instance_state in ('terminated'):
+      print('Instance %s is %s' % (instance_id))
+    
+    if instance_state in ('stopping'):
+      waiter = client.get_waiter('instance_stopped')
+      waiter.wait(InstanceIds=[instance_id])
+      instance_state = 'stopped'
+      print('Instance %s is %s' % (instance_id))
+    
+    if instance_state in ('stopped'):
+      if args.remove:
+        r = client.terminate_instances(InstanceIds=[instance_id])
+        if len(r['TerminatingInstances']) > 0:
+          instance_state = r['TerminatingInstances'][0]['CurrentState']['Name']
+          print('Instance %s is %s' % (instance_id, instance_state))
+        else:
+          logger.error('Instance %s was stopped, but could not be terminated' % (instance_id))
+      else:
+        if not args.stop:
+          r = client.start_instances(InstanceIds=[instance_id])
+          if len(r['StartingInstances']) > 0:
+            instance_state = r['StartingInstances'][0]['CurrentState']['Name']
+            print('Instance %s is %s' % (instance_id,instance_state))
+          else:
+            logger.error('Instance %s was stopped, but could not started' % (instance_id))
+     
+     
+    if instance_state in ('Pending'):
+      waiter = client.get_waiter('instance_running')
+      waiter.wait(InstanceIds=[instance_id])
+      print('Instance %s running' % (instance_id))
       
+    if args.remove:
+      r = client.terminate_instances(InstanceIds=[instanc_id])
+      if len(r['TerminatingInstances']) > 0:
+        instance_state = r['TerminatingInstances'][0]['CurrentState']['Name']
+            print("Instance %s is %s" % (instance_id, instance_state))
+
+            key_pair.delete()
+            print('Deleted key.')
+        else:
+            logger.error('Instance %s was stopped, but could not be terminated' % (instance_id))
+
+
+
+    if args.stop and instance_state not in ('stopped', 'shutting-down', 'terminated'):
+        r = client.stop_instances(InstanceIds=[instance_id])
+        if len(r['StoppingInstances']) > 0:
+            instance_state = r['StoppingInstances'][0]['CurrentState']['Name']
+            print("Instance %s is %s" % (instance_id, instance_state))
+
+            if instance_state in ('stopping'):
+                waiter = client.get_waiter('instance_stopped')
+                waiter.wait(InstanceIds=[instance_id])
+                instance_state = 'stopped'
+                print('Instance %s stopped.' % (instance_id))
+            else:
+                logger.error('Unexpected... Instance %s is %s' % (instance_id, instance_state))
+        else:
+            logger.error('Instance %s was running, but could not be stopped' % (instance_id))
+
+##########################################################################
+
+if __name__ == '__main__':
+    main()
+
+##########################################################################
