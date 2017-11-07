@@ -78,4 +78,65 @@ def main():
     
     r = client.describe_instances(Filters=[{'Name':'key-name','Values':[key_name]}])
     if len(r['Reservations']) > 0:
+      for res in r['Reservations']:
+        for ins in res['Instances']:
+          ins_id=ins['InstanceId']
+          ins_state=ins['State']['Name']
+          if not args.info:
+            print('Instance %s is %s' % (ins_id,ins_state))
+          if ins_state not in('shutting-down', 'terminated'):
+            instance_id = ins_id
+            instance_state = ins_state
+            if args.info:
+              if args.verbose:
+                print('Image Id: %s' % ins['ImageId'])
+                print('Instance Id: %s' % ins['InstanceId'])
+                print('Instance type: %s' % ins['InstanceType'])
+                print('Public Ip: %s' % ins['PublicIpAddress'])
+                print('Public DNS Name: %s' % ins['PublicDNSName'])
+                
+              else:
+                print(ins['PublicDNSName'])
+                
+    if instance_id == None:
+      if args.remove:
+        print('No instance found')
+        sys.exit(0)
+      else: 
+        if args.info:
+          sys.exit(0)
+        try:
+          logger.info('Creating a new instance')
+          r = cient.run_instances(
+            Image_Id=aws_image,
+            Min_count=1,
+            Max_count=1,
+            KeyName=key_name,
+            InstanceType=instance_type,
+            InstanceInitiatedShutdownBehaviour='terminate',
+          )
+          instance_id = r['Instances'][0]['InstanceId']
+          instance_state = r['instances'][0]['State']['Name']
+          print('Instance %s is %s' % (instance_id,instance_state))
+        except:
+          print('Unable to create Instance')
+        
+           
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+            
       
