@@ -76,8 +76,8 @@ def main():
     
     ## Creating Instance
     
-    r = client.describe_instances(Filters=[{'Name':'key-name','Values':[key_name]}])
-    if len(r['Reservations']) > 0:
+  r = client.describe_instances(Filters=[{'Name':'key-name','Values':[key_name]}])
+  if len(r['Reservations']) > 0:
       for res in r['Reservations']:
         for ins in res['Instances']:
           ins_id=ins['InstanceId']
@@ -98,7 +98,7 @@ def main():
               else:
                 print(ins['PublicDNSName'])
                 
-    if instance_id == None:
+  if instance_id == None:
       if args.remove:
         print('No instance found')
         sys.exit(0)
@@ -121,22 +121,22 @@ def main():
         except:
           print('Unable to create Instance')
      
-    if instance_state in ('shutting-down'):
+  if instance_state in ('shutting-down'):
       waiter = client.get_waiter('instance_terminated')
       waiter.wait(InstanceIds=[instance_id])
       instance_state = 'terminated'
       print('Instance %s terminated' % (instance_id))
     
-    if instance_state in ('terminated'):
+  if instance_state in ('terminated'):
       print('Instance %s is %s' % (instance_id))
     
-    if instance_state in ('stopping'):
+  if instance_state in ('stopping'):
       waiter = client.get_waiter('instance_stopped')
       waiter.wait(InstanceIds=[instance_id])
       instance_state = 'stopped'
       print('Instance %s is %s' % (instance_id))
     
-    if instance_state in ('stopped'):
+  if instance_state in ('stopped'):
       if args.remove:
         r = client.terminate_instances(InstanceIds=[instance_id])
         if len(r['TerminatingInstances']) > 0:
@@ -154,12 +154,12 @@ def main():
             logger.error('Instance %s was stopped, but could not started' % (instance_id))
      
      
-    if instance_state in ('Pending'):
+  if instance_state in ('Pending'):
       waiter = client.get_waiter('instance_running')
       waiter.wait(InstanceIds=[instance_id])
       print('Instance %s running' % (instance_id))
       
-    if args.remove:
+  if args.remove:
       r = client.terminate_instances(InstanceIds=[instanc_id])
       if len(r['TerminatingInstances']) > 0:
         instance_state = r['TerminatingInstances'][0]['CurrentState']['Name']
@@ -171,7 +171,7 @@ def main():
 
 
 
-    if args.stop and instance_state not in ('stopped', 'shutting-down', 'terminated'):
+  if args.stop and instance_state not in ('stopped', 'shutting-down', 'terminated'):
         r = client.stop_instances(InstanceIds=[instance_id])
         if len(r['StoppingInstances']) > 0:
             instance_state = r['StoppingInstances'][0]['CurrentState']['Name']
