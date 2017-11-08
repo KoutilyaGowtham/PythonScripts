@@ -163,7 +163,7 @@ def main():
       r = client.terminate_instances(InstanceIds=[instanc_id])
       if len(r['TerminatingInstances']) > 0:
         instance_state = r['TerminatingInstances'][0]['CurrentState']['Name']
-            print("Instance %s is %s" % (instance_id, instance_state))
+        print("Instance %s is %s" % (instance_id, instance_state))
 
             key_pair.delete()
             print('Deleted key.')
