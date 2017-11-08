@@ -29,7 +29,7 @@ args = parser.parse_args()
 #################################################################
 
 def main():
-  global key_name,aws_image,instance_type
+  global key_name, aws_image, instance_type
   
   session = None
   ec2 = None
@@ -63,12 +63,12 @@ def main():
       
       with open(key_name + '.pem', w) as f:
         f.write(r['keyMaterial'])
-        print("Downloaded Keypair")
+      print("Downloaded Keypair")
         
-        key_pair=ec2.keypair(key_name)
-        key_pair.load()
-        logger.info("Found keypair with fingerprint")
-        logger.info(key_pair.key_fingerprint)
+      key_pair=ec2.keypair(key_name)
+      key_pair.load()
+      logger.info("Found keypair with fingerprint")
+      logger.info(key_pair.key_fingerprint)
       
     except Exception as e:
       print(e)
@@ -188,7 +188,6 @@ def main():
             logger.error('Instance %s was running, but could not be stopped' % (instance_id))
 
 ##########################################################################
-
 if __name__ == '__main__':
     main()
 
