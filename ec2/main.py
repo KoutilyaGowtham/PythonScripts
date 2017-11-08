@@ -14,7 +14,7 @@ key_name = "windowsnew"
 aws_image = "ami-c998b6b2"
 instance_type = "t2.micro"
 
-Parser = argparse.ArgumentParser(description='Simple CLI / module to create/start/stop EC2 instances')
+parser = argparse.ArgumentParser(description='Simple CLI / module to create/start/stop EC2 instances')
 parser.add_argument('-p', '--profile', dest='aws_profile', metavar="AWS_PROFILE", help="AWS Profile Name")
 parser.add_argument('-k', '--key', dest='aws_key', metavar="AWS_KEY", help="AWS Key name to use. Default: %s" % key_name)
 parser.add_argument('-t', '--type', dest='aws_type', metavar="AWS_INS_TYPE", help="AWS Instance type. Default: %s" % instance_type)
