@@ -166,7 +166,7 @@ def main():
         print("Instance %s is %s" % (instance_id, instance_state))
         key_pair.delete()
         print('Deleted key.')
-        else:
+      else:
             logger.error('Instance %s was stopped, but could not be terminated' % (instance_id))
 
 
