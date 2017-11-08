@@ -164,9 +164,8 @@ def main():
       if len(r['TerminatingInstances']) > 0:
         instance_state = r['TerminatingInstances'][0]['CurrentState']['Name']
         print("Instance %s is %s" % (instance_id, instance_state))
-
-            key_pair.delete()
-            print('Deleted key.')
+        key_pair.delete()
+        print('Deleted key.')
         else:
             logger.error('Instance %s was stopped, but could not be terminated' % (instance_id))
 
